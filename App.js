@@ -2,7 +2,8 @@ import React from 'react';
 import { Root } from 'native-base';
 import { Font, AppLoading } from 'expo';
 import { StackNavigator } from 'react-navigation';
-import CardView from './components/Card';
+import CardView from './components/Deck';
+import DeckList from './components/DeckList';
 import { purple, white } from './utils/colors';
 
 
@@ -11,11 +12,20 @@ const robotoMedium = require('native-base/Fonts/Roboto_medium.ttf');
 
 const MainNavigator = StackNavigator({
   Home: {
-    screen: CardView,
+    headerTitle: 'FlashMobiles',
+    screen: DeckList,
+    navigationOptions: {
+      headerTitle: 'FlashMobiles',
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      },
+    },
   },
-  EntryDetail: {
+  Deck: {
     screen: CardView,
     navigationOptions: {
+      headerTitle: 'FlashMobiles',
       headerTintColor: white,
       headerStyle: {
         backgroundColor: purple,
