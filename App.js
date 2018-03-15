@@ -1,27 +1,63 @@
 import React from 'react';
-import { Text } from 'react-native';
-import styled from 'styled-components/native';
-import { purple } from './utils/colors';
+import { Root } from 'native-base';
+import { Font, AppLoading } from 'expo';
+import { StackNavigator } from 'react-navigation';
+import CardView from './components/Deck';
+import DeckList from './components/DeckList';
+import { purple, white } from './utils/colors';
 
-const CenterView = styled.View` 
-  flex: 1;
-  background-color: ${purple};
-  align-items: center;
-  justify-content: center;
-`;
 
+const Roboto = require('native-base/Fonts/Roboto.ttf');
+const robotoMedium = require('native-base/Fonts/Roboto_medium.ttf');
+
+const MainNavigator = StackNavigator({
+  Home: {
+    headerTitle: 'FlashMobiles',
+    screen: DeckList,
+    navigationOptions: {
+      headerTitle: 'FlashMobiles',
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      },
+    },
+  },
+  Deck: {
+    screen: CardView,
+    navigationOptions: {
+      headerTitle: 'FlashMobiles',
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      },
+    },
+  },
+});
 
 export default class App extends React.Component {
-  state ={
+  state = { loading: true };
+  async componentWillMount() {
+    await Font.loadAsync({
+      Roboto,
+      Roboto_medium: robotoMedium,
 
+    });
+    this.setState({ loading: false });
   }
   render() {
+    if (this.state.loading) {
+      return (
+        <Root>
+          <AppLoading />
+        </Root>
+      );
+    }
     return (
-      <CenterView>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </CenterView>
+      <Root>
+        <MainNavigator />
+
+      </Root>
+
     );
   }
 }
