@@ -15,7 +15,7 @@ import {
   Body,
 } from 'native-base';
 import PropTypes from 'prop-types';
-import { mock } from '../../utils/api';
+import { getDecks } from '../../utils/api';
 
 
 const atul = require('../../assets/logo.png');
@@ -37,8 +37,14 @@ const styles = StyleSheet.create({
 
 class DeckList extends Component {
   state ={
-
+    decks: [],
   }
+
+  componentWillMount() {
+    getDecks().then(data => this.setState({ decks: data }));
+  }
+
+
   render() {
     return (
       <Container style={styles.container}>
@@ -52,10 +58,10 @@ class DeckList extends Component {
 
         <Content>
           <List
-            dataArray={mock}
+            dataArray={this.state.decks}
             renderRow={data =>
               (
-                <ListItem avatar onPress={() => this.props.navigation.navigate('Deck')}>
+                <ListItem avatar onPress={() => this.props.navigation.navigate('Deck', { deck: data })}>
                   <Left>
                     <Thumbnail small source={atul} />
                   </Left>
