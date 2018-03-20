@@ -13,6 +13,7 @@ import {
   Left,
   Right,
   Body,
+  Button,
 } from 'native-base';
 import PropTypes from 'prop-types';
 import { getDecks } from '../../utils/api';
@@ -41,9 +42,10 @@ class DeckList extends Component {
   }
 
   componentWillMount() {
-    getDecks().then(data => this.setState({ decks: data }));
+    this.fecthDecks();
   }
 
+  fecthDecks= () => getDecks().then(data => this.setState({ decks: data }));
 
   render() {
     return (
@@ -54,6 +56,14 @@ class DeckList extends Component {
             <Title>Decks</Title>
           </Body>
           <Right />
+          <Right>
+            <Button transparent onPress={() => this.props.navigation.navigate('DeckCreate', { loadDecks: this.fecthDecks })}>
+              <Text>
+                      new
+              </Text>
+              <Icon name="md-add" />
+            </Button>
+          </Right>
         </Header>
 
         <Content>

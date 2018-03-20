@@ -36,8 +36,19 @@ export const getDecks = () => AsyncStorage.getItem(FLASH_CARDS_KEY).then((data) 
   return AsyncStorage.getItem(FLASH_CARDS_KEY).then(dataMock => JSON.parse(dataMock));
 });
 
-export const getDeck = ({ title }) => AsyncStorage.getItem(FLASH_CARDS_KEY).then((decks) => {
+export const getDeck = title => AsyncStorage.getItem(FLASH_CARDS_KEY).then((decks) => {
   const decksJSON = JSON.parse(decks) || [];
   return decksJSON.find(deck => deck.title === title);
+});
+
+export const saveDeckTitle = title => AsyncStorage.getItem(FLASH_CARDS_KEY).then((decks) => {
+  const decksJSON = JSON.parse(decks) || [];
+  const newDeck = {
+    title,
+    questions: [],
+  };
+  const newDeckList = [...decksJSON, newDeck];
+  AsyncStorage.setItem(FLASH_CARDS_KEY, JSON.stringify(newDeckList));
+  return newDeck;
 });
 
