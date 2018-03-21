@@ -15,6 +15,7 @@ import {
   Right,
   Body,
 } from 'native-base';
+import PropTypes from 'prop-types';
 
 
 const deviceHeight = Dimensions.get('window').height;
@@ -35,7 +36,8 @@ const styles = StyleSheet.create({
   },
 });
 
-function Deck() {
+function Deck(props) {
+  const { deck } = props.navigation.state.params;
   return (
     <Container style={styles.container}>
       <Header>
@@ -51,7 +53,7 @@ function Deck() {
             <Left>
               <Thumbnail source={logo} />
               <Body>
-                <Text>NativeBase</Text>
+                <Text>{deck.title}</Text>
                 <Text note>April 15, 2016</Text>
               </Body>
             </Left>
@@ -79,7 +81,7 @@ function Deck() {
             <Left>
               <Button transparent>
                 <Icon name="md-albums" />
-                <Text>4 cards</Text>
+                <Text>{deck.questions.length} cards</Text>
               </Button>
             </Left>
           </CardItem>
@@ -89,5 +91,8 @@ function Deck() {
   );
 }
 
+Deck.propTypes = {
+  navigation: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+};
 
 export default Deck;

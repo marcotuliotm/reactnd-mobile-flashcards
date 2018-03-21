@@ -13,9 +13,11 @@ import {
   Left,
   Right,
   Body,
+  Button,
+  Spinner,
 } from 'native-base';
 import PropTypes from 'prop-types';
-import { mock } from '../../utils/api';
+import { getDecks } from '../../utils/api';
 
 
 const atul = require('../../assets/logo.png');
@@ -37,9 +39,21 @@ const styles = StyleSheet.create({
 
 class DeckList extends Component {
   state ={
-
+    decks: [],
+    load: false,
   }
+
+  componentWillMount() {
+    this.fecthDecks();
+  }
+
+  fecthDecks= () => {
+    this.setState({ load: true });
+    getDecks().then(data => this.setState({ decks: data, load: false }));
+  }
+
   render() {
+    const { load, decks } = this.state;
     return (
       <Container style={styles.container}>
         <Header>
@@ -48,14 +62,23 @@ class DeckList extends Component {
             <Title>Decks</Title>
           </Body>
           <Right />
+          <Right>
+            <Button transparent onPress={() => this.props.navigation.navigate('DeckCreate', { loadDecks: this.fecthDecks })}>
+              <Text>
+                      new
+              </Text>
+              <Icon name="md-add" />
+            </Button>
+          </Right>
         </Header>
 
         <Content>
-          <List
-            dataArray={mock}
-            renderRow={data =>
+          {load ? (<Spinner />) : (
+            <List
+              dataArray={decks}
+              renderRow={data =>
               (
-                <ListItem avatar onPress={() => this.props.navigation.navigate('Deck')}>
+                <ListItem avatar onPress={() => this.props.navigation.navigate('Deck', { deck: data })}>
                   <Left>
                     <Thumbnail small source={atul} />
                   </Left>
@@ -72,7 +95,7 @@ class DeckList extends Component {
                   </Right>
                 </ListItem>
               )}
-          />
+            />)}
         </Content>
       </Container>
     );
