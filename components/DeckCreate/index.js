@@ -8,6 +8,7 @@ import {
   Text,
   Form, Item, Input, Label,
   Right, Body,
+  Spinner,
 } from 'native-base';
 import PropTypes from 'prop-types';
 import { saveDeckTitle } from '../../utils/api';
@@ -31,13 +32,16 @@ class DeckCreate extends Component {
   state ={
     title: '',
     error: false,
+    load: false,
   }
 
   onSaveDeckTitle= () => {
     if (this.state.title === '') {
       this.setState({ error: true });
     } else {
+      this.setState({ load: true });
       saveDeckTitle(this.state.title).then(() => {
+        this.setState({ load: false });
         this.props.navigation.state.params.loadDecks();
         this.props.navigation.goBack();
       });
@@ -46,7 +50,7 @@ class DeckCreate extends Component {
 
 
   render() {
-    const { title, error } = this.state;
+    const { title, error, load } = this.state;
     return (
       <Container style={styles.container}>
         <Header>
@@ -64,11 +68,13 @@ class DeckCreate extends Component {
                 value={title}
               />
             </Item>
-            <Button onPress={this.onSaveDeckTitle} block style={{ margin: 15, marginTop: 50 }}>
-              <Text>ADD</Text>
-            </Button>
-          </Form>
+            {load ? (<Spinner />) : (
+              <Button onPress={this.onSaveDeckTitle} block style={{ margin: 15, marginTop: 50 }}>
+                <Text>ADD</Text>
+              </Button>
+            )}
 
+          </Form>
         </Content>
       </Container>
     );

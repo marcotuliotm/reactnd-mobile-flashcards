@@ -14,6 +14,7 @@ import {
   Right,
   Body,
   Button,
+  Spinner,
 } from 'native-base';
 import PropTypes from 'prop-types';
 import { getDecks } from '../../utils/api';
@@ -39,15 +40,20 @@ const styles = StyleSheet.create({
 class DeckList extends Component {
   state ={
     decks: [],
+    load: false,
   }
 
   componentWillMount() {
     this.fecthDecks();
   }
 
-  fecthDecks= () => getDecks().then(data => this.setState({ decks: data }));
+  fecthDecks= () => {
+    this.setState({ load: true });
+    getDecks().then(data => this.setState({ decks: data, load: false }));
+  }
 
   render() {
+    const { load, decks } = this.state;
     return (
       <Container style={styles.container}>
         <Header>
@@ -67,9 +73,10 @@ class DeckList extends Component {
         </Header>
 
         <Content>
-          <List
-            dataArray={this.state.decks}
-            renderRow={data =>
+          {load ? (<Spinner />) : (
+            <List
+              dataArray={decks}
+              renderRow={data =>
               (
                 <ListItem avatar onPress={() => this.props.navigation.navigate('Deck', { deck: data })}>
                   <Left>
@@ -88,7 +95,7 @@ class DeckList extends Component {
                   </Right>
                 </ListItem>
               )}
-          />
+            />)}
         </Content>
       </Container>
     );
