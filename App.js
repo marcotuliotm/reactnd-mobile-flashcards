@@ -5,6 +5,7 @@ import { StackNavigator } from 'react-navigation';
 import CardView from './components/Deck';
 import DeckList from './components/DeckList';
 import DeckCreate from './components/DeckCreate';
+import CardCreate from './components/CardCreate';
 import { purple, white } from './utils/colors';
 
 
@@ -35,6 +36,16 @@ const MainNavigator = StackNavigator({
   },
   DeckCreate: {
     screen: DeckCreate,
+    navigationOptions: {
+      headerTitle: 'FlashMobiles',
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      },
+    },
+  },
+  CardCreate: {
+    screen: CardCreate,
     navigationOptions: {
       headerTitle: 'FlashMobiles',
       headerTintColor: white,

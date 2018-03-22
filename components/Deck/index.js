@@ -14,8 +14,10 @@ import {
   Left,
   Right,
   Body,
+  Spinner,
 } from 'native-base';
 import PropTypes from 'prop-types';
+import { saveCard } from '../../utils/api';
 
 
 const deviceHeight = Dimensions.get('window').height;
@@ -40,14 +42,26 @@ const styles = StyleSheet.create({
 class Deck extends React.Component {
   state ={
     opacity: new Animated.Value(0),
+    load: false,
   }
 
   componentDidMount() {
     const { opacity } = this.state;
     Animated.timing(opacity, { toValue: 1, duration: 2000 }).start();
   }
+
+  addCard = (question) => {
+    const { deck, addCard } = this.props.navigation.state.params;
+    const { title } = deck;
+    this.setState({ load: true });
+    saveCard(title, question).then(() => {
+      addCard(title, question);
+      this.setState({ load: false });
+    });
+  }
+
   render() {
-    const { opacity } = this.state;
+    const { opacity, load } = this.state;
     const { deck } = this.props.navigation.state.params;
     return (
       <Container style={styles.container}>
@@ -57,52 +71,53 @@ class Deck extends React.Component {
           </Body>
           <Right />
         </Header>
+        {load ? (<Spinner />) : (
+          <Content padder>
+            <Card style={styles.mb}>
+              <CardItem bordered>
+                <Left>
+                  <Thumbnail source={logo} />
+                  <Body>
+                    <Text>{deck.title}</Text>
+                    <Text note>April 15, 2016</Text>
+                  </Body>
+                </Left>
+              </CardItem>
 
-        <Content padder>
-          <Card style={styles.mb}>
-            <CardItem bordered>
-              <Left>
-                <Thumbnail source={logo} />
-                <Body>
-                  <Text>{deck.title}</Text>
-                  <Text note>April 15, 2016</Text>
+              <CardItem style={styles.cardMain}>
+                <Animated.Image
+                  source={deckImage}
+                  style={{ opacity }}
+                />
+              </CardItem>
+              <CardItem style={styles.cardMain}>
+
+                <Body >
+                  <Left>
+                    <Button iconLeft primary onPress={() => this.props.navigation.navigate('CardCreate', { addCard: this.addCard })}>
+                      <Icon name="md-add" />
+                      <Text>Add Card</Text>
+                    </Button>
+                  </Left>
+                  <Left>
+                    <Button iconLeft success>
+                      <Icon name="md-play" />
+                      <Text>Start Quiz</Text>
+                    </Button>
+                  </Left>
                 </Body>
-              </Left>
-            </CardItem>
-
-            <CardItem style={styles.cardMain}>
-              <Animated.Image
-                source={deckImage}
-                style={{ opacity }}
-              />
-            </CardItem>
-            <CardItem style={styles.cardMain}>
-
-              <Body >
+              </CardItem>
+              <CardItem style={{ paddingVertical: 0 }}>
                 <Left>
-                  <Button iconLeft primary>
-                    <Icon name="md-add" />
-                    <Text>Add Card</Text>
+                  <Button transparent>
+                    <Icon name="md-albums" />
+                    <Text>{deck.questions.length} cards</Text>
                   </Button>
                 </Left>
-                <Left>
-                  <Button iconLeft success>
-                    <Icon name="md-play" />
-                    <Text>Start Quiz</Text>
-                  </Button>
-                </Left>
-              </Body>
-            </CardItem>
-            <CardItem style={{ paddingVertical: 0 }}>
-              <Left>
-                <Button transparent>
-                  <Icon name="md-albums" />
-                  <Text>{deck.questions.length} cards</Text>
-                </Button>
-              </Left>
-            </CardItem>
-          </Card>
-        </Content>
+              </CardItem>
+            </Card>
+          </Content>
+        )}
       </Container>
     );
   }
