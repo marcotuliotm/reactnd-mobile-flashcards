@@ -52,3 +52,14 @@ export const saveDeckTitle = title => AsyncStorage.getItem(FLASH_CARDS_KEY).then
   return newDeck;
 });
 
+export const saveCard = (title, question) => AsyncStorage.getItem(FLASH_CARDS_KEY)
+  .then((decks) => {
+    const decksJSON = JSON.parse(decks) || [];
+    const newDeckList = decksJSON.map((deck) => {
+      if (deck.title === title) {
+        deck.questions.push(question);
+      }
+      return deck;
+    });
+    AsyncStorage.setItem(FLASH_CARDS_KEY, JSON.stringify(newDeckList));
+  });

@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { getDecks } from '../../utils/api';
 
 
-const atul = require('../../assets/logo.png');
+const deckImage = require('../../assets/deck.png');
 
 
 const styles = StyleSheet.create({
@@ -52,18 +52,33 @@ class DeckList extends Component {
     getDecks().then(data => this.setState({ decks: data, load: false }));
   }
 
+  addDeck= (deck) => {
+    const { decks } = this.state;
+    decks.push(deck);
+    this.setState({ decks });
+  }
+
+  addCard= (title, question) => {
+    const { decks } = this.state;
+    this.setState({ load: true });
+    decks.find(deck => deck.title === title).questions.push(question);
+    this.setState({ load: false });
+
+    this.setState({ decks });
+  }
+
   render() {
     const { load, decks } = this.state;
+
     return (
       <Container style={styles.container}>
         <Header>
-
           <Body>
             <Title>Decks</Title>
           </Body>
           <Right />
           <Right>
-            <Button transparent onPress={() => this.props.navigation.navigate('DeckCreate', { loadDecks: this.fecthDecks })}>
+            <Button transparent onPress={() => this.props.navigation.navigate('DeckCreate', { addDeck: this.addDeck })}>
               <Text>
                       new
               </Text>
@@ -71,16 +86,15 @@ class DeckList extends Component {
             </Button>
           </Right>
         </Header>
-
         <Content>
           {load ? (<Spinner />) : (
             <List
               dataArray={decks}
               renderRow={data =>
               (
-                <ListItem avatar onPress={() => this.props.navigation.navigate('Deck', { deck: data })}>
+                <ListItem avatar onPress={() => this.props.navigation.navigate('Deck', { deck: data, addCard: this.addCard })}>
                   <Left>
-                    <Thumbnail small source={atul} />
+                    <Thumbnail small source={deckImage} />
                   </Left>
                   <Body>
                     <Text>

@@ -40,9 +40,9 @@ class DeckCreate extends Component {
       this.setState({ error: true });
     } else {
       this.setState({ load: true });
-      saveDeckTitle(this.state.title).then(() => {
+      saveDeckTitle(this.state.title).then((deck) => {
         this.setState({ load: false });
-        this.props.navigation.state.params.loadDecks();
+        this.props.navigation.state.params.addDeck(deck);
         this.props.navigation.goBack();
       });
     }
@@ -62,7 +62,7 @@ class DeckCreate extends Component {
         <Content>
           <Form >
             <Item error={error} floatingLabel>
-              <Label>Title</Label>
+              <Label>Title:</Label>
               <Input
                 onChangeText={titleIn => this.setState({ title: titleIn })}
                 value={title}
