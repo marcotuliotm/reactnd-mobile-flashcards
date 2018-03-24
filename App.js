@@ -2,10 +2,11 @@ import React from 'react';
 import { Root } from 'native-base';
 import { Font, AppLoading } from 'expo';
 import { StackNavigator } from 'react-navigation';
-import CardView from './components/Deck';
+import DeckView from './components/Deck';
 import DeckList from './components/DeckList';
 import DeckCreate from './components/DeckCreate';
 import CardCreate from './components/CardCreate';
+import CardSwiper from './components/CardSwiper';
 import { purple, white } from './utils/colors';
 
 
@@ -25,7 +26,7 @@ const MainNavigator = StackNavigator({
     },
   },
   Deck: {
-    screen: CardView,
+    screen: DeckView,
     navigationOptions: {
       headerTitle: 'FlashMobiles',
       headerTintColor: white,
@@ -46,6 +47,16 @@ const MainNavigator = StackNavigator({
   },
   CardCreate: {
     screen: CardCreate,
+    navigationOptions: {
+      headerTitle: 'FlashMobiles',
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      },
+    },
+  },
+  Quiz: {
+    screen: CardSwiper,
     navigationOptions: {
       headerTitle: 'FlashMobiles',
       headerTintColor: white,
@@ -77,9 +88,7 @@ export default class App extends React.Component {
     return (
       <Root>
         <MainNavigator />
-
       </Root>
-
     );
   }
 }

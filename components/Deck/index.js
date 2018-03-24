@@ -21,7 +21,6 @@ import { saveCard } from '../../utils/api';
 
 
 const deviceHeight = Dimensions.get('window').height;
-const logo = require('../../assets/logo.png');
 const deckImage = require('../../assets/deck.png');
 
 
@@ -76,14 +75,12 @@ class Deck extends React.Component {
             <Card style={styles.mb}>
               <CardItem bordered>
                 <Left>
-                  <Thumbnail source={logo} />
+                  <Thumbnail source={deckImage} />
                   <Body>
                     <Text>{deck.title}</Text>
-                    <Text note>April 15, 2016</Text>
                   </Body>
                 </Left>
               </CardItem>
-
               <CardItem style={styles.cardMain}>
                 <Animated.Image
                   source={deckImage}
@@ -91,7 +88,6 @@ class Deck extends React.Component {
                 />
               </CardItem>
               <CardItem style={styles.cardMain}>
-
                 <Body >
                   <Left>
                     <Button iconLeft primary onPress={() => this.props.navigation.navigate('CardCreate', { addCard: this.addCard })}>
@@ -100,7 +96,7 @@ class Deck extends React.Component {
                     </Button>
                   </Left>
                   <Left>
-                    <Button iconLeft success>
+                    <Button iconLeft success onPress={() => this.props.navigation.navigate('Quiz', { cards: deck.questions })}>
                       <Icon name="md-play" />
                       <Text>Start Quiz</Text>
                     </Button>

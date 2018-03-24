@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { getDecks } from '../../utils/api';
 
 
-const atul = require('../../assets/logo.png');
+const deckImage = require('../../assets/deck.png');
 
 
 const styles = StyleSheet.create({
@@ -73,7 +73,6 @@ class DeckList extends Component {
     return (
       <Container style={styles.container}>
         <Header>
-
           <Body>
             <Title>Decks</Title>
           </Body>
@@ -87,7 +86,6 @@ class DeckList extends Component {
             </Button>
           </Right>
         </Header>
-
         <Content>
           {load ? (<Spinner />) : (
             <List
@@ -96,7 +94,7 @@ class DeckList extends Component {
               (
                 <ListItem avatar onPress={() => this.props.navigation.navigate('Deck', { deck: data, addCard: this.addCard })}>
                   <Left>
-                    <Thumbnail small source={atul} />
+                    <Thumbnail small source={deckImage} />
                   </Left>
                   <Body>
                     <Text>
