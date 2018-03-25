@@ -30,78 +30,91 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: deviceHeight / 4,
   },
+  card: {
+    flex: 1,
+    justifyContent: 'center',
+    height: deviceHeight / 7,
+  },
 });
 
-class CardView extends React.Component {
-  state ={
-    isSee: false,
-  }
+function CardView(props) {
+  const {
+    card,
+    isSee,
+    onCorrect,
+    onWrong,
+    onSee,
+    restCount,
+  } = props;
 
-  onSee = () => this.setState({ isSee: true });
-
-  onCorrect = () => this.setState({ isSee: false });
-
-  onWrong = () => this.setState({ isSee: false });
-
-
-  render() {
-    const { isSee } = this.state;
-    const { card } = this.props;
-    return (
-      <Card style={styles.mb}>
-        <CardItem bordered>
-          <Left>
-            <Thumbnail small source={cardImage} />
-            <Body>
-              <Text note>Question:</Text>
-              <Text>{card.question}</Text>
+  return (
+    <Card style={styles.mb}>
+      <CardItem bordered>
+        <Left>
+          <Thumbnail small source={cardImage} />
+          <Body>
+            <Text note>Question:</Text>
+            <Text>{card.question}</Text>
+          </Body>
+        </Left>
+      </CardItem>
+      {isSee ? (
+        <View>
+          <CardItem style={styles.cardMain}>
+            <Body >
+              <Text note>Answer:</Text>
+              <Text>{card.answer}</Text>
             </Body>
-          </Left>
-        </CardItem>
-        {isSee ? (
-          <View>
-            <CardItem style={styles.cardMain}>
-              <Body >
-                <Text note>Answer:</Text>
-                <Text>{card.answer}</Text>
-              </Body>
-            </CardItem>
-            <CardItem style={styles.cardMain}>
-              <Body >
-                <Left>
-                  <Button iconLeft success onPress={this.onCorrect}>
-                    <Icon name="md-checkmark" />
-                    <Text>Correct</Text>
-                  </Button>
-                </Left>
-                <Left>
-                  <Button iconLeft danger onPress={this.onWrong}>
-                    <Icon name="md-close" />
-                    <Text>Wrong</Text>
-                  </Button>
-                </Left>
-              </Body>
-            </CardItem>
-          </View>
+          </CardItem>
+          <CardItem style={styles.cardMain}>
+            <Body >
+              <Left>
+                <Button iconLeft success onPress={onCorrect}>
+                  <Icon name="md-checkmark" />
+                  <Text>Correct</Text>
+                </Button>
+              </Left>
+              <Left>
+                <Button iconLeft danger onPress={onWrong}>
+                  <Icon name="md-close" />
+                  <Text>Incorrect</Text>
+                </Button>
+              </Left>
+            </Body>
+          </CardItem>
+        </View>
             ) : (
               <View>
                 <CardItem style={styles.cardMain} />
                 <CardItem style={styles.cardMain}>
-                  <Button iconRight info onPress={this.onSee}>
+                  <Button iconRight info onPress={onSee}>
                     <Text>See answer</Text>
                     <Icon name="md-help" />
                   </Button>
                 </CardItem>
               </View>
             )}
-      </Card>
+      <CardItem style={{ paddingVertical: 0 }}>
+        <Left>
+          <Button transparent>
+            <Icon name="md-albums" />
+            <Text>{restCount} cards remain</Text>
+          </Button>
+        </Left>
+      </CardItem>
+    </Card>
 
-    );
-  }
+  );
 }
+
 
 CardView.propTypes = {
   card: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  isSee: PropTypes.bool.isRequired,
+  onSee: PropTypes.func.isRequired,
+  onCorrect: PropTypes.func.isRequired,
+  onWrong: PropTypes.func.isRequired,
+  restCount: PropTypes.number.isRequired,
 };
 
 export default CardView;

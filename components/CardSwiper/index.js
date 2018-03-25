@@ -42,55 +42,78 @@ const styles = StyleSheet.create({
 
 class CardSwiper extends Component {
   state ={
-    isAnswered: false,
+    load: false,
     correctCount: 0,
     wrongCount: 0,
     deckSwiper: null,
+    isSee: false,
+    restCount: 0,
   }
 
 
   componentWillMount() {
-    this.setState({ deckSwiper: this.buildDeckSwiper() });
+    this.setState({
+      deckSwiper: this.buildDeckSwiper(),
+      restCount: this.props.navigation.state.params.cards.length - 1,
+    });
   }
 
-  onAnswered=() => {
-    const { isAnswered } = this.state;
-    this.setState({ isAnswered: !isAnswered });
+  onSee = () => this.setState({ isSee: true });
+
+  onCorrect = () => {
+    this.onSwipeRight();
+    this._deckSwiper._root.swipeRight();  // eslint-disable-line
+  }
+
+  onWrong = () => {
+    this.onSwipeLeft();
+    this._deckSwiper._root.swipeLeft();  // eslint-disable-line
   }
 
   onSwipeRight = () => {
-    let { correctCount } = this.state;
+    let { correctCount, restCount } = this.state;
     correctCount += 1;
-    this.setState({ correctCount });
+    if (restCount > 0) { restCount -= 1; }
+    this.setState({ correctCount, isSee: false, restCount });
   }
 
-  onSwipLeft = () => {
-    let { wrongCount } = this.state;
+  onSwipeLeft = () => {
+    let { wrongCount, restCount } = this.state;
     wrongCount += 1;
-    this.setState({ wrongCount });
+    if (restCount > 0) { restCount -= 1; }
+    this.setState({ wrongCount, isSee: false, restCount });
   }
 
   onRestart= () => {
-    this.setState({ isAnswered: true, deckSwiper: null });
+    this.setState({ load: true, deckSwiper: null });
     setTimeout(() => {
       this.setState({
-        isAnswered: false,
+        load: false,
         deckSwiper: this.buildDeckSwiper(),
         correctCount: 0,
         wrongCount: 0,
+        restCount: this.props.navigation.state.params.cards.length - 1,
       });
     }, 1000);
   }
 
   buildDeckSwiper = () => (
     <DeckSwiper
+      ref={c => this._deckSwiper = c}  // eslint-disable-line
       looping={false}
       onSwipeRight={this.onSwipeRight}
-      onSwipeLeft={this.onSwipLeft}
+      onSwipeLeft={this.onSwipeLeft}
       dataSource={this.props.navigation.state.params.cards}
       renderItem={data =>
               (
-                <CardView card={data} />
+                <CardView
+                  card={data}
+                  isSee={this.state.isSee}
+                  onSee={this.onSee}
+                  onCorrect={this.onCorrect}
+                  onWrong={this.onWrong}
+                  restCount={this.state.restCount}
+                />
               )}
       renderEmpty={() =>
                 (
@@ -112,7 +135,7 @@ class CardSwiper extends Component {
                       <Right>
                         <Button iconLeft danger >
                           <Icon name="md-close" />
-                          <Text>Wrong: {this.state.wrongCount}</Text>
+                          <Text>Incorrect: {this.state.wrongCount}</Text>
                         </Button>
                       </Right>
                     </CardItem>
@@ -143,7 +166,7 @@ class CardSwiper extends Component {
 
 
   render() {
-    const { deckSwiper, isAnswered } = this.state;
+    const { deckSwiper, load } = this.state;
 
     return (
       <Container style={styles.container}>
@@ -153,7 +176,7 @@ class CardSwiper extends Component {
           </Body>
           <Right />
         </Header>
-        {isAnswered ? (<Spinner />) : (
+        {load ? (<Spinner />) : (
           deckSwiper)}
       </Container>
     );
