@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Animated } from 'react-native';
 import {
   Container,
   Header,
@@ -15,6 +15,7 @@ import {
   Body,
   Button,
   Spinner,
+  View,
 } from 'native-base';
 import PropTypes from 'prop-types';
 import { getDecks } from '../../utils/api';
@@ -34,6 +35,11 @@ const styles = StyleSheet.create({
   mb: {
     marginBottom: 15,
   },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 
@@ -41,6 +47,8 @@ class DeckList extends Component {
   state ={
     decks: [],
     load: false,
+    opacity: new Animated.Value(0),
+    isAnimated: false,
   }
 
   componentWillMount() {
@@ -67,8 +75,23 @@ class DeckList extends Component {
     this.setState({ decks });
   }
 
+  goDeck = (deck) => {
+    this.setState({ isAnimated: true });
+    const { opacity } = this.state;
+    Animated.timing(opacity, { toValue: 1, duration: 2000 }).start();
+    setTimeout(() => {
+      this.props.navigation.navigate('Deck', { deck, addCard: this.addCard });
+      this.setState({
+        opacity: new Animated.Value(0),
+        isAnimated: false,
+      });
+    }, 2050);
+  }
+
   render() {
-    const { load, decks } = this.state;
+    const {
+      load, decks, isAnimated, opacity,
+    } = this.state;
 
     return (
       <Container style={styles.container}>
@@ -86,13 +109,21 @@ class DeckList extends Component {
             </Button>
           </Right>
         </Header>
-        <Content>
-          {load ? (<Spinner />) : (
-            <List
-              dataArray={decks}
-              renderRow={data =>
+        {isAnimated ? (
+          <View style={styles.center}>
+            <Animated.Image
+              source={deckImage}
+              style={{ opacity }}
+            />
+          </View>
+          ) : (
+            <Content>
+              {load ? (<Spinner />) : (
+                <List
+                  dataArray={decks}
+                  renderRow={data =>
               (
-                <ListItem avatar onPress={() => this.props.navigation.navigate('Deck', { deck: data, addCard: this.addCard })}>
+                <ListItem avatar onPress={() => this.goDeck(data)}>
                   <Left>
                     <Thumbnail small source={deckImage} />
                   </Left>
@@ -109,8 +140,9 @@ class DeckList extends Component {
                   </Right>
                 </ListItem>
               )}
-            />)}
-        </Content>
+                />)}
+            </Content>
+        )}
       </Container>
     );
   }
