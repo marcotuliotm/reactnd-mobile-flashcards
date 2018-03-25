@@ -8,6 +8,7 @@ import DeckCreate from './components/DeckCreate';
 import CardCreate from './components/CardCreate';
 import CardSwiper from './components/CardSwiper';
 import { purple, white } from './utils/colors';
+import { setLocalNotification } from './utils/helpers';
 
 
 const Roboto = require('native-base/Fonts/Roboto.ttf');
@@ -77,6 +78,11 @@ export default class App extends React.Component {
     });
     this.setState({ loading: false });
   }
+
+  componentDidMount() {
+    setLocalNotification();
+  }
+
   render() {
     if (this.state.loading) {
       return (

@@ -17,6 +17,11 @@ import {
 } from 'native-base';
 import PropTypes from 'prop-types';
 import CardView from '../Card';
+import {
+  clearLocalNotification,
+  setLocalNotification,
+} from '../../utils/helpers';
+
 
 const deviceHeight = Dimensions.get('window').height;
 
@@ -52,6 +57,7 @@ class CardSwiper extends Component {
 
 
   componentWillMount() {
+    clearLocalNotification().then(setLocalNotification);
     this.setState({
       deckSwiper: this.buildDeckSwiper(),
       restCount: this.props.navigation.state.params.cards.length - 1,
