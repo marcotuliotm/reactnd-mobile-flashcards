@@ -39,12 +39,15 @@ class CardView extends React.Component {
 
   onSee = () => this.setState({ isSee: true });
 
+  onCorrect = () => this.setState({ isSee: false });
+
+  onWrong = () => this.setState({ isSee: false });
+
 
   render() {
     const { isSee } = this.state;
     const { card } = this.props;
     return (
-
       <Card style={styles.mb}>
         <CardItem bordered>
           <Left>
@@ -66,13 +69,13 @@ class CardView extends React.Component {
             <CardItem style={styles.cardMain}>
               <Body >
                 <Left>
-                  <Button iconLeft success >
+                  <Button iconLeft success onPress={this.onCorrect}>
                     <Icon name="md-checkmark" />
                     <Text>Correct</Text>
                   </Button>
                 </Left>
                 <Left>
-                  <Button iconLeft danger>
+                  <Button iconLeft danger onPress={this.onWrong}>
                     <Icon name="md-close" />
                     <Text>Wrong</Text>
                   </Button>
@@ -90,7 +93,6 @@ class CardView extends React.Component {
                   </Button>
                 </CardItem>
               </View>
-
             )}
       </Card>
 
