@@ -57,7 +57,6 @@ class CardSwiper extends Component {
 
 
   componentWillMount() {
-    clearLocalNotification().then(setLocalNotification);
     this.setState({
       deckSwiper: this.buildDeckSwiper(),
       restCount: this.props.navigation.state.params.cards.length - 1,
@@ -79,14 +78,18 @@ class CardSwiper extends Component {
   onSwipeRight = () => {
     let { correctCount, restCount } = this.state;
     correctCount += 1;
-    if (restCount > 0) { restCount -= 1; }
+    if (restCount > 0) { restCount -= 1; } else {
+      clearLocalNotification().then(setLocalNotification);
+    }
     this.setState({ correctCount, isSee: false, restCount });
   }
 
   onSwipeLeft = () => {
     let { wrongCount, restCount } = this.state;
     wrongCount += 1;
-    if (restCount > 0) { restCount -= 1; }
+    if (restCount > 0) { restCount -= 1; } else {
+      clearLocalNotification().then(setLocalNotification);
+    }
     this.setState({ wrongCount, isSee: false, restCount });
   }
 
