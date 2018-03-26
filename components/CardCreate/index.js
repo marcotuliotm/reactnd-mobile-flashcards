@@ -38,21 +38,24 @@ class CardCreate extends Component {
 
   onSaveCard= () => {
     const {
-      question, answer, errorQuestion, errorAnswer,
+      question, answer,
     } = this.state;
+    let error = false;
     if (question === '') {
+      error = true;
       this.setState({ errorQuestion: true });
     } else {
       this.setState({ errorQuestion: false });
     }
 
     if (answer === '') {
+      error = true;
       this.setState({ errorAnswer: true });
     } else {
       this.setState({ errorAnswer: false });
     }
 
-    if (!errorQuestion && !errorAnswer) {
+    if (!error) {
       this.setState({ load: true });
       this.props.navigation.state.params.addCard({ question, answer });
       this.props.navigation.goBack();
