@@ -88,7 +88,7 @@ function CardView(props) {
                 <CardItem style={styles.cardMain} />
                 <CardItem style={styles.cardMain}>
                   <Button iconRight info onPress={onSee}>
-                    <Text>See answer</Text>
+                    <Text>Show Answer</Text>
                     <Icon name="md-help" />
                   </Button>
                 </CardItem>
