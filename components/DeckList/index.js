@@ -75,12 +75,21 @@ class DeckList extends Component {
     this.setState({ decks });
   }
 
+  addResult= (title, result) => {
+    const { decks } = this.state;
+    this.setState({ load: true });
+    decks.find(deck => deck.title === title).result = result;
+    this.setState({ load: false });
+
+    this.setState({ decks });
+  }
+
   goDeck = (deck) => {
     this.setState({ isAnimated: true });
     const { opacity } = this.state;
     Animated.timing(opacity, { toValue: 1, duration: 2000 }).start();
     setTimeout(() => {
-      this.props.navigation.navigate('Deck', { deck, addCard: this.addCard });
+      this.props.navigation.navigate('Deck', { deck, addCard: this.addCard, addResult: this.addResult });
       this.setState({
         opacity: new Animated.Value(0),
         isAnimated: false,
@@ -135,6 +144,12 @@ class DeckList extends Component {
                       {data.questions.length} cards
                     </Text>
                   </Body>
+                  <Right>
+                    {data.result.length > 0 ? (
+                      <Text note>
+                      Last score: {data.result}
+                      </Text>) : (null)}
+                  </Right>
                   <Right>
                     <Icon name="md-arrow-forward" />
                   </Right>

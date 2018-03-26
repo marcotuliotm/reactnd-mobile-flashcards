@@ -18,7 +18,7 @@ import {
   Toast,
 } from 'native-base';
 import PropTypes from 'prop-types';
-import { saveCard } from '../../utils/api';
+import { saveCard, saveResult } from '../../utils/api';
 
 
 const deviceHeight = Dimensions.get('window').height;
@@ -56,6 +56,17 @@ class Deck extends React.Component {
     this.setState({ load: true });
     saveCard(title, question).then(() => {
       addCard(title, question);
+      this.setState({ load: false });
+    });
+  }
+
+  addResult = (correctCount) => {
+    const { deck, addResult } = this.props.navigation.state.params;
+    const { title } = deck;
+    const result = `${correctCount}/${deck.questions.length}`;
+    this.setState({ load: true });
+    saveResult(title, result).then(() => {
+      addResult(title, result);
       this.setState({ load: false });
     });
   }
@@ -102,7 +113,7 @@ class Deck extends React.Component {
                       success
                       onPress={() => {
                         if (deck.questions.length > 0) {
-                        this.props.navigation.navigate('Quiz', { cards: deck.questions });
+                        this.props.navigation.navigate('Quiz', { cards: deck.questions, addResult: this.addResult });
                         } else {
                           Toast.show({
                             text: 'Please add new card first!',
