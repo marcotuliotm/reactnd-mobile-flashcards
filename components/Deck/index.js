@@ -15,6 +15,7 @@ import {
   Right,
   Body,
   Spinner,
+  Toast,
 } from 'native-base';
 import PropTypes from 'prop-types';
 import { saveCard } from '../../utils/api';
@@ -96,7 +97,21 @@ class Deck extends React.Component {
                     </Button>
                   </Left>
                   <Left>
-                    <Button iconLeft success onPress={() => this.props.navigation.navigate('Quiz', { cards: deck.questions })}>
+                    <Button
+                      iconLeft
+                      success
+                      onPress={() => {
+                        if (deck.questions.length > 0) {
+                        this.props.navigation.navigate('Quiz', { cards: deck.questions });
+                        } else {
+                          Toast.show({
+                            text: 'Please add new card first!',
+                            position: 'bottom',
+                            buttonText: 'Okay',
+                          });
+                        }
+                    }}
+                    >
                       <Icon name="md-play" />
                       <Text>Start Quiz</Text>
                     </Button>
