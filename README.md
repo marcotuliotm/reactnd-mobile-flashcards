@@ -1,3 +1,20 @@
+# Mobile Flashcards
+
+This project was built with native base UI.
+
+## Test
+
+The application was tested on Motorola g5s.
+
+
+## Run
+
+* `yarn install`
+* `yarn start`
+* Follow instructions to open Android or iOS simulator on PC or phone.
+
+## Create React Native App
+
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
 
 Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
